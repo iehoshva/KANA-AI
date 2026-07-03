@@ -1,0 +1,48 @@
+# ORCA files (user-specific, not shareable)
+*.inp
+*.out
+*.orcacosmo
+*.xyz
+*.gbw
+*.hess
+*.engrad
+*.opt
+*.trj
+orca_tmp/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Output (generated at runtime)
+output/
+extraction_screening_results.csv
+screening_report.md
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Checkpoints and large files (distributed as release assets)
+best_cinn_checkpoint/
+*.zip
+water_sigma.npy
+compound_metadata.db
+compound_properties.db
+scalers.pkl
+
+# Conda/venv
+.conda/
+venv/
+env/

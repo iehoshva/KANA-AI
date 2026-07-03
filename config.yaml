@@ -1,0 +1,49 @@
+# KANA Post-Training Pipeline Configuration
+# Edit this file to match your local setup.
+
+# Base directory (where compound_metadata.db, scalers.pkl, etc. are located)
+# Default: parent of KANA-AI directory
+base_dir: ".."
+
+# Model checkpoint directory (relative to base_dir)
+checkpoint_dir: "best_cinn_checkpoint"
+
+# Scalers file (relative to base_dir)
+scalers_path: "scalers.pkl"
+
+# Database paths (relative to base_dir)
+db_metadata: "compound_metadata.db"
+db_properties: "compound_properties.db"
+
+# ORCA DFT binary path
+# Install ORCA from: https://orcaforum.kofo.mpg.de/
+# Leave empty to disable ab initio calculations (DB-only mode)
+orca_bin: ""
+# Linux example:
+# orca_bin: "/opt/orca/orca"
+# Windows example:
+# orca_bin: "C:\\Program Files\\orca\\orca.exe"
+
+# ORCA computation settings
+orca_nprocs: 4
+orca_maxcore: 1000
+orca_timeout_sec: 86400
+orca_max_retries: 3
+
+# Model preset (1-4, matching pre-training)
+model_preset: "1"
+
+# Output directory (relative to base_dir)
+output_dir: "output"
+
+# Temperature sweep range (Kelvin)
+T_min: 278.15
+T_max: 373.15
+T_step: 5.0
+
+# Minimum selectivity thresholds
+S_min_abs: 10.0
+S_min_des: 50.0
+
+# Model validation MAE (ln gamma units) — from best checkpoint (epoch 940)
+MAE_ln_gamma: 0.0749
