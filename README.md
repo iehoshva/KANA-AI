@@ -296,24 +296,6 @@ Optional: `rdkit` (for ab initio calculations and thermal data estimation)
 
 ---
 
-## Citation
-
-If you use KANA-AI in your research, please cite:
-
-```bibtex
-@article{oktaviani2026kana,
-  title={KANA AI: A Chemical-Informed Neural Network with
-        Hard Thermodynamic Constraints for Multicomponent
-        Activity Coefficient Prediction},
-  author={Oktaviani, Patricia Yolanda and Wyldanta, Yehosyua Widiatmo},
-  journal={Computer and Chemical Engineering},
-  year={2026},
-  publisher={Elsevier}
-}
-```
-
----
-
 ## License
 
 GNU General Public License v3.0 (GPLv3). See [LICENSE](LICENSE).
