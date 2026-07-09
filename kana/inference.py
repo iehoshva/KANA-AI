@@ -99,14 +99,28 @@ class KANAInference:
 
         Args:
             sigma_raw: shape (n_comp, 51) raw sigma profiles
-            scalar_raw: shape (n_comp, 8) raw quantum features
+            scalar_raw: shape (n_comp, 10) raw quantum features
+                Order: [HOMO, LUMO, Dipole, Max_Charge, Min_Charge,
+                        Energy_Gap, 0, 0, 0, 0]
 
         Returns:
             scaled_sigma: shape (n_comp, 51, 1)
-            scaled_scalar: shape (n_comp, 8)
+            scaled_scalar: shape (n_comp, 10)
         """
         sigma_2d = sigma_raw.reshape(-1, self.cfg.SIGMA_DIM)
         scalar_2d = scalar_raw.reshape(-1, self.cfg.SCALAR_DIM)
+
+        # Validate: positions 3-5 (Max_Charge, Min_Charge, Energy_Gap)
+        # must not all be zero (indicates missing data)
+        for i in range(scalar_2d.shape[0]):
+            if np.all(scalar_2d[i, 3:6] == 0.0):
+                import warnings
+                warnings.warn(
+                    f"Component {i}: M0/M1/M2 (positions 3-5) are all zero. "
+                    f"This likely means Max_Charge, Min_Charge, Energy_Gap "
+                    f"are missing. Predictions will be unreliable.",
+                    stacklevel=2,
+                )
 
         sigma_scaled = self.scaler_sigma.transform(sigma_2d)
         scalar_scaled = self.scaler_scalar.transform(scalar_2d)

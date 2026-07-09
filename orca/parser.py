@@ -37,13 +37,13 @@ class ORCAParser:
         if m:
             result['LUMO'] = float(m.group(1))
 
-        # HOMO-LUMO gap
+        # HOMO-LUMO gap (always positive: LUMO - HOMO)
         if 'HOMO' in result and 'LUMO' in result:
-            result['gap'] = result['HOMO'] - result['LUMO']
+            result['gap'] = result['LUMO'] - result['HOMO']
         else:
             m = re.search(r'HOMO-LUMO Gap.*?:\s*(-?\d+\.\d+)', text)
             if m:
-                result['gap'] = float(m.group(1))
+                result['gap'] = abs(float(m.group(1)))
 
         # Dipole moment
         m = re.search(r'Total Dipole Moment.*?:\s*(\d+\.\d+)', text)
@@ -57,9 +57,9 @@ class ORCAParser:
         # Mulliken charges
         charges = ORCAParser._parse_mulliken_charges(text)
         if charges:
-            result['M0'] = max(charges) - min(charges)  # charge range
-            result['M1'] = np.std(charges)  # charge std
-            result['M2'] = 0.0  # secondary metric (placeholder)
+            result['M0'] = max(charges)  # max Mulliken charge
+            result['M1'] = min(charges)  # min Mulliken charge
+            result['M2'] = result.get('gap', 0.0)  # HOMO-LUMO energy gap
             result['M3'] = 0.0  # padding
             result['M4'] = 0.0  # padding
         else:

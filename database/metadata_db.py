@@ -31,7 +31,9 @@ class MetadataDB:
 
         Returns:
             (sigma_51, scalars_10) or None if not found / incomplete
-            scalars_10: [HOMO, LUMO, Dipole, M0, M1, M2, M3, M4, 0, 0]
+            scalars_10 order (must match training data):
+              [HOMO, LUMO, Dipole, Max_Charge(M0), Min_Charge(M1),
+               Energy_Gap(M2), 0, 0, 0, 0]
         """
         row = self.conn.execute(
             """SELECT sigma_profile, HOMO, LUMO, Dipole, M0, M1, M2, M3, M4
@@ -46,12 +48,12 @@ class MetadataDB:
         if sigma.shape[0] != 51:
             return None
 
-        # 8 quantum features + 2 padding zeros = 10 total (matching scaler)
+        # 6 quantum features + 4 zeros = 10 total (matching scaler)
+        # Order: [HOMO, LUMO, Dipole, Max_Charge, Min_Charge, Energy_Gap, 0, 0, 0, 0]
         scalars = np.array([
             row['HOMO'] or 0.0, row['LUMO'] or 0.0, row['Dipole'] or 0.0,
             row['M0'] or 0.0, row['M1'] or 0.0, row['M2'] or 0.0,
-            row['M3'] or 0.0, row['M4'] or 0.0,
-            0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
         ], dtype='float32')
 
         if np.any(np.isnan(scalars[:3])):
@@ -76,14 +78,19 @@ class MetadataDB:
         return row['compound_name'] if row else None
 
     def get_all_with_features(self) -> Dict[str, Tuple[np.ndarray, np.ndarray]]:
-        """Get all compounds that have complete sigma + quantum features."""
+        """Get all compounds that have complete sigma + quantum features.
+
+        Returns compounds with: sigma_profile, HOMO, LUMO, Dipole, AND M0/M1/M2
+        (Max_Charge, Min_Charge, Energy_Gap).
+        """
         rows = self.conn.execute(
             """SELECT compound_code, sigma_profile,
                       HOMO, LUMO, Dipole, M0, M1, M2, M3, M4
                FROM compounds
                WHERE sigma_profile IS NOT NULL
                  AND HOMO IS NOT NULL AND LUMO IS NOT NULL
-                 AND Dipole IS NOT NULL"""
+                 AND Dipole IS NOT NULL
+                 AND M0 IS NOT NULL AND M1 IS NOT NULL AND M2 IS NOT NULL"""
         ).fetchall()
 
         result = {}
@@ -91,12 +98,12 @@ class MetadataDB:
             sigma = np.fromstring(row['sigma_profile'], sep=',', dtype='float32')
             if sigma.shape[0] != 51:
                 continue
-            # 8 quantum features + 2 padding zeros = 10 total
+            # 6 quantum features + 4 zeros = 10 total (matching scaler)
+            # Order: [HOMO, LUMO, Dipole, Max_Charge, Min_Charge, Energy_Gap, 0, 0, 0, 0]
             scalars = np.array([
                 row['HOMO'] or 0.0, row['LUMO'] or 0.0, row['Dipole'] or 0.0,
                 row['M0'] or 0.0, row['M1'] or 0.0, row['M2'] or 0.0,
-                row['M3'] or 0.0, row['M4'] or 0.0,
-                0.0, 0.0,
+                0.0, 0.0, 0.0, 0.0,
             ], dtype='float32')
             if not np.any(np.isnan(scalars[:3])):
                 result[row['compound_code']] = (sigma, scalars)

@@ -10,12 +10,14 @@ from kana.config import Config, PipelineConfig
 
 
 # Hardcoded water features (always present for ABS mode)
-# 10 features: [HOMO, LUMO, Gap, Dipole, M0, M1, M2, M3, M4, padding]
+# 10 features matching training data order:
+#   [HOMO, LUMO, Dipole, Max_Charge, Min_Charge, Energy_Gap, 0, 0, 0, 0]
 WATER_SCALARS_RAW = np.array([
-    -12.62, 0.48, 13.10,  # HOMO, LUMO, Gap
-    1.85,                   # Dipole
-    0.42, -0.42, 0.0, 0.0, # M0, M1, M2, M3
-    0.0, 0.0,              # M4, padding
+    -12.62, 0.48,     # HOMO, LUMO
+    1.85,              # Dipole
+    0.42, -0.42,       # Max_Charge, Min_Charge
+    13.10,             # Energy_Gap (HOMO-LUMO)
+    0.0, 0.0, 0.0, 0.0,
 ], dtype='float32')
 
 
