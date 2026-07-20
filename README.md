@@ -305,3 +305,9 @@ GNU General Public License v3.0 (GPLv3). See [LICENSE](LICENSE).
 ## Acknowledgements
 
 Built on the [KANA](https://github.com/Flowychie/KANA) pre-training framework. Uses JAX/Flax for differentiable scientific computing.
+
+## Project Status: Archived
+This repository is now archived and no longer under active development.
+KANA was conceived by Yehosyua Widiatmo Wyldanta and Patricia Yolanda Oktaviani as a shared endeavour. Built not only to explore the intersection of chemistry and artificial intelligence, but also to draw us closer together through a common purpose. Regrettably, without sufficient support, and lacking the capacity to sustain development as a pair alone, we are no longer able to continue maintaining this project.
+To those who showed interest in our work: thank you. The code remains available in the hope that it may yet serve as a useful reference, a foundation for others, or simply as proof that two people with a shared vision can build something meaningful, however briefly.
+Yehosyua & Patricia
